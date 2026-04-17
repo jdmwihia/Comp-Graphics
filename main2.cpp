@@ -1,3 +1,7 @@
+// GEORGE OTIENO NGIYE ,SCT211-0427/2023
+// JEREMY MWIHIA ,SCT211-0028/2023
+
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GL/glut.h>

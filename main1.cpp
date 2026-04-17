@@ -1,3 +1,8 @@
+
+
+// GEORGE OTIENO NGIYE ,SCT211-0427/2023
+// JEREMY MWIHIA ,SCT211-0028/2023
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GL/glut.h>
@@ -9,6 +14,7 @@
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
+
 
 
 // DATA
