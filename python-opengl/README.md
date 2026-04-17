@@ -1,4 +1,4 @@
-# Youth Earnings Visualization (Python Implementation)
+# Youth Earnings Visulization -Python Implementation
 
 ## Project Overview
 This project provides a Python-based visualization of average daily youth earnings using **PyOpenGL** and **Pandas**. It is developed as an extension to the core C++ OpenGL assignment to demonstrate cross-platform graphics rendering and modern data management techniques.
