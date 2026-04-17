@@ -10,9 +10,9 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-// =======================
+
 // DATA
-// =======================
+
 float earnings[] = {590, 850, 940, 1070, 800, 1020};
 const int n = 6;
 const char* days[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -21,9 +21,9 @@ float minVal = 590;
 float maxVal = 1070;
 float padding = 0.15f;
 
-// =======================
+
 // HELPERS
-// =======================
+
 float scaleY(float value) {
     float norm = (value - minVal) / (maxVal - minVal);
     return (-1.0f + padding) + norm * (2.0f - 2 * padding);
@@ -50,9 +50,9 @@ void drawCircle(float x, float y, float r) {
     glEnd();
 }
 
-// =======================
+
 // AXES
-// =======================
+
 void drawAxes() {
     glColor3f(0.2f, 0.2f, 0.2f);
     glLineWidth(1.0f); 
@@ -85,9 +85,9 @@ void drawAxes() {
     }
 }
 
-// =======================
+
 // CALLBACKS
-// =======================
+
 // This function runs every time you resize the window
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     // Ensure we don't divide by zero
@@ -107,9 +107,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-// =======================
+
 // CORE RENDERING
-// =======================
+
 void render() {
     glClearColor(1.0f, 0.992f, 0.816f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT);

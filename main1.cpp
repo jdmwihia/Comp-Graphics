@@ -10,9 +10,9 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-// =======================
+
 // DATA
-// =======================
+
 int mode = 1;
 float earnings[] = {590, 850, 940, 1070, 800, 1020};
 const int n = 6;
@@ -25,9 +25,9 @@ float padding = 0.15f;
 // Aspect ratio for shape correction
 float aspectRatio = 1.0f;
 
-// =======================
+
 // SCALING
-// =======================
+
 float scaleY(float value) {
     float norm = (value - minVal) / (maxVal - minVal);
     return (-1.0f + padding) + norm * (2.0f - 2 * padding);
@@ -37,9 +37,9 @@ float getX(int i) {
     return (-1.0f + padding) + (2.0f - 2 * padding) * i / (n - 1);
 }
 
-// =======================
+
 // TEXT
-// =======================
+
 void drawText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
     for (int i = 0; text[i] != '\0'; i++) {
@@ -47,9 +47,9 @@ void drawText(float x, float y, const char* text) {
     }
 }
 
-// =======================
+
 // AXES + TICKS
-// =======================
+
 void drawAxes() {
     glColor3f(0, 0, 0);
     float x0 = -1.0f + padding;
@@ -81,9 +81,9 @@ void drawAxes() {
     }
 }
 
-// =======================
+
 // SHAPE HELPERS
-// =======================
+
 void drawAsterisk(float x, float y, float size) {
     float sx = size / aspectRatio; // Scale horizontal component
     glBegin(GL_LINES);
@@ -112,9 +112,9 @@ void drawCircle(float x, float y, float r) {
     glEnd();
 }
 
-// =======================
+
 // MODES
-// =======================
+
 void drawMode1() {
     glColor3f(0, 0, 0);
     glLineWidth(1.0f);
@@ -144,9 +144,9 @@ void drawMode3() {
     for (int i = 0; i < n; i++) drawCircle(getX(i), scaleY(earnings[i]), 0.03f);
 }
 
-// =======================
+
 // SYSTEM CALLBACKS
-// =======================
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
     if (height == 0) height = 1;
