@@ -54,7 +54,7 @@ void drawCircle(float x, float y, float r) {
 // AXES
 // =======================
 void drawAxes() {
-    glColor3f(0.2f, 0.2f, 0.2f); // Dark gray for axes
+    glColor3f(0.2f, 0.2f, 0.2f);
     glLineWidth(1.0f); 
     float x0 = -1.0f + padding;
     float y0 = -1.0f + padding;
@@ -62,8 +62,8 @@ void drawAxes() {
     float y1 =  1.0f - padding;
 
     glBegin(GL_LINES);
-        glVertex2f(x0, y0); glVertex2f(x1, y0); // X-axis
-        glVertex2f(x0, y0); glVertex2f(x0, y1); // Y-axis
+        glVertex2f(x0, y0); glVertex2f(x1, y0); 
+        glVertex2f(x0, y0); glVertex2f(x0, y1); 
     glEnd();
 
     drawText(-0.95f, 0.92f, "Earnings (Ksh)");
@@ -86,16 +86,37 @@ void drawAxes() {
 }
 
 // =======================
+// CALLBACKS
+// =======================
+// This function runs every time you resize the window
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    // Ensure we don't divide by zero
+    if (height == 0) height = 1;
+    
+    // Update the viewport to the new window dimensions
+    glViewport(0, 0, width, height);
+
+    // Reset the coordinate system
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    // Maintain a coordinate system from -1 to 1
+    // This ensures the graph stays centered and scales
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+}
+
+// =======================
 // CORE RENDERING
 // =======================
 void render() {
-    // 1. Background - Cream color
     glClearColor(1.0f, 0.992f, 0.816f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawAxes();
 
-    // 2. The Line - Blue
+    // Line - Blue
     glColor3f(0.0f, 0.0f, 1.0f); 
     glLineWidth(2.5f); 
     glBegin(GL_LINE_STRIP);
@@ -104,7 +125,7 @@ void render() {
     }
     glEnd();
 
-    // 3. The Data Points - Red Circles
+    // Points - Red Circles
     glColor3f(1.0f, 0.0f, 0.0f); 
     for (int i = 0; i < n; i++) {
         drawCircle(getX(i), scaleY(earnings[i]), 0.025f);
@@ -123,15 +144,25 @@ int main(int argc, char** argv) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Earnings Visualization", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Earnings Graph Implementation 3", NULL, NULL);
     if (!window) { glfwTerminate(); return -1; }
     
     glfwMakeContextCurrent(window);
+    
+    // Register the resize callback
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
-    glViewport(0, 0, w, h); 
+    // Enable Anti-aliasing for smoother lines/circles
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_LINE_SMOOTH);
+
+    // Set initial viewport and projection
+    int screenWidth, screenHeight;
+    glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
+    framebuffer_size_callback(window, screenWidth, screenHeight);
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
