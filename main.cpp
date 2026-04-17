@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <GL/glut.h>
 
 #include <iostream>
 #include <cmath>
@@ -15,6 +16,8 @@ int mode = 1;
 
 float earnings[] = {590, 850, 940, 1070, 800, 1020};
 const int n = 6;
+
+const char* days[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 float minVal = 590;
 float maxVal = 1070;
@@ -37,23 +40,83 @@ float getX(int i) {
 }
 
 // =======================
-// AXES
+// TEXT
+// =======================
+void drawText(float x, float y, const char* text) {
+    glRasterPos2f(x, y);
+    for (int i = 0; text[i] != '\0'; i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, text[i]);
+    }
+}
+
+// =======================
+// AXES + TICKS
 // =======================
 void drawAxes() {
     glColor3f(0, 0, 0);
 
-    glBegin(GL_LINES);
-        glVertex2f(-1.0f + padding, -1.0f + padding);
-        glVertex2f( 1.0f - padding, -1.0f + padding);
+    float x0 = -1.0f + padding;
+    float y0 = -1.0f + padding;
+    float x1 =  1.0f - padding;
+    float y1 =  1.0f - padding;
 
-        glVertex2f(-1.0f + padding, -1.0f + padding);
-        glVertex2f(-1.0f + padding,  1.0f - padding);
+    // Axes
+    glBegin(GL_LINES);
+        glVertex2f(x0, y0); glVertex2f(x1, y0); // X-axis
+        glVertex2f(x0, y0); glVertex2f(x0, y1); // Y-axis
     glEnd();
+
+    // =========================
+    // FIX 1: Lifted Y-axis label higher
+    // =========================
+    drawText(-0.95f, 0.92f, "Earnings (Ksh)");
+    drawText(0.75f, -0.95f, "Days");
+
+    // X-axis labels
+    for (int i = 0; i < n; i++) {
+        float x = getX(i);
+        drawText(x - 0.03f, -0.98f, days[i]);
+    }
+
+    // =========================
+    // Y-axis ticks (NO 1100)
+    // =========================
+    int ticks[] = {600, 700, 800, 900, 1000};
+    int tickCount = 5;
+
+    for (int i = 0; i < tickCount; i++) {
+        float val = ticks[i];
+
+        float yNorm = (val - minVal) / (maxVal - minVal);
+        float y = (-1.0f + padding) + yNorm * (2.0f - 2 * padding);
+
+        // tick mark
+        glBegin(GL_LINES);
+            glVertex2f(x0 - 0.01f, y);
+            glVertex2f(x0 + 0.01f, y);
+        glEnd();
+
+        // label
+        char buffer[16];
+        sprintf(buffer, "%d", ticks[i]);
+        drawText(x0 - 0.12f, y - 0.01f, buffer);
+    }
 }
 
 // =======================
 // MODE 1
 // =======================
+void drawAsterisk(float x, float y, float size) {
+    glBegin(GL_LINES);
+
+    glVertex2f(x - size, y); glVertex2f(x + size, y);
+    glVertex2f(x, y - size); glVertex2f(x, y + size);
+    glVertex2f(x - size, y - size); glVertex2f(x + size, y + size);
+    glVertex2f(x - size, y + size); glVertex2f(x + size, y - size);
+
+    glEnd();
+}
+
 void drawMode1() {
     glColor3f(0, 0, 0);
 
@@ -64,17 +127,7 @@ void drawMode1() {
     glEnd();
 
     for (int i = 0; i < n; i++) {
-        float x = getX(i);
-        float y = scaleY(earnings[i]);
-        float s = 0.03f;
-
-        glBegin(GL_LINES);
-            glVertex2f(x - s, y);
-            glVertex2f(x + s, y);
-
-            glVertex2f(x, y - s);
-            glVertex2f(x, y + s);
-        glEnd();
+        drawAsterisk(getX(i), scaleY(earnings[i]), 0.025f);
     }
 }
 
@@ -164,10 +217,11 @@ void render() {
 // =======================
 // MAIN
 // =======================
-int main() {
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+
     glfwInit();
 
-    // MUST be compatibility profile for glBegin
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
@@ -186,17 +240,14 @@ int main() {
         return -1;
     }
 
-    // FIX 1: projection reset (critical for visibility)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // FIX 2: background color
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // FIX 3: viewport
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
     glViewport(0, 0, w, h);
