@@ -21,7 +21,7 @@
 
 int mode = 1;
 float earnings[] = {590, 850, 940, 1070, 800, 1020};
-const int n = 6;
+const int n = 6; //NUMBER OF DATA POINTS
 const char* days[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 
 float minVal = 590;
@@ -54,28 +54,32 @@ void drawText(float x, float y, const char* text) {
 }
 
 
-// AXES + TICKS
+// This function is responsible for drawing the entire coordinate system of the  graph.
 
 void drawAxes() {
-    glColor3f(0, 0, 0);
+    glColor3f(0, 0, 0); // drawing color
+    
+    //graph boundaries
     float x0 = -1.0f + padding;
     float y0 = -1.0f + padding;
     float x1 =  1.0f - padding;
     float y1 =  1.0f - padding;
 
     glBegin(GL_LINES);
-        glVertex2f(x0, y0); glVertex2f(x1, y0); // X-axis
-        glVertex2f(x0, y0); glVertex2f(x0, y1); // Y-axis
+        glVertex2f(x0, y0); glVertex2f(x1, y0); // horizontal line(X-axis)
+        glVertex2f(x0, y0); glVertex2f(x0, y1); // vertical line(Y-axis)
     glEnd();
 
+    //Labels
     drawText(-0.95f, 0.92f, "Earnings (Ksh)");
     drawText(0.88f, -0.95f, "Days"); 
 
     for (int i = 0; i < n; i++) {
         drawText(getX(i) - 0.05f / aspectRatio, -0.95f, days[i]);
     }
-
+   //Y-axis tick values
     int ticks[] = {600, 700, 800, 900, 1000};
+    
     for (int i = 0; i < 5; i++) {
         float y = scaleY((float)ticks[i]);
         glBegin(GL_LINES);
@@ -92,6 +96,7 @@ void drawAxes() {
 
 void drawAsterisk(float x, float y, float size) {
     float sx = size / aspectRatio; // Scale horizontal component
+    //Y-axis ticks
     glBegin(GL_LINES);
         glVertex2f(x - sx, y); glVertex2f(x + sx, y);
         glVertex2f(x, y - size); glVertex2f(x, y + size);
